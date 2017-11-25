@@ -69,3 +69,24 @@ function getRandomIndex(counterLimit) {
 // Получение и отображение скрытого модального окна с настройками персонажей
 var setupModal = document.querySelector('.setup');
 setupModal.classList.remove('hidden');
+
+// Получение и заполнение данными шаблона похожих персонажей
+// 4 заполненных шаблона с волшебниками уходят во fragment -> fragment в список wizardsList ->
+// -> wizardsList в секцию wizardsSection -> wizardsSection отрисовывается на странице
+var wizardTemplate = document.querySelector('#similar-wizard-template').content;
+var wizardsList = document.querySelector('.setup-similar-list');
+var fragment = document.createDocumentFragment();
+
+for (var j = 0; j < 4; j++) {
+  var wizard = wizardTemplate.cloneNode(true);
+
+  wizard.querySelector('.setup-similar-label').textContent = similarWizards[j].name;
+  wizard.querySelector('.wizard-coat').style.fill = similarWizards[j].coatColor;
+  wizard.querySelector('.wizard-eyes').style.fill = similarWizards[j].eyesColor;
+  fragment.appendChild(wizard);
+}
+
+wizardsList.appendChild(fragment);
+
+var wizardsSection = setupModal.querySelector('.setup-similar');
+wizardsSection.classList.remove('hidden');
