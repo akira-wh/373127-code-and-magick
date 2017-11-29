@@ -9,12 +9,19 @@ var availableEyesColors = ['black', 'red', 'blue', 'yellow', 'green'];
 
 // Массив персонажей, заполняющийся в цикле 4-мя похожими магами (объектами со сгенерированными свойствами)
 var similarWizards = [];
+generateSimilarWizards();
 
-for (var i = 0; i < 4; i++) {
-  similarWizards[i] = {};
-  similarWizards[i].name = getRandomName(availableNames, availableSurenames);
-  similarWizards[i].coatColor = getRandomCoatColor(availableCoatColors);
-  similarWizards[i].eyesColor = getRandomEyesColor(availableEyesColors);
+/**
+* Функция, заполняющая массив с похожими волшебниками сгенерированными объектами этих волшебников
+* @function generateSimilarWizards
+*/
+function generateSimilarWizards() {
+  for (var i = 0; i < 4; i++) {
+    similarWizards[i] = {};
+    similarWizards[i].name = getRandomName(availableNames, availableSurenames);
+    similarWizards[i].coatColor = getRandomCoatColor(availableCoatColors);
+    similarWizards[i].eyesColor = getRandomEyesColor(availableEyesColors);
+  }
 }
 
 /**
@@ -64,11 +71,29 @@ function getRandomIndex(counterLimit) {
   return Math.round(0 - 0.5 + Math.random() * (counterLimit + 1));
 }
 
+/**
+* Функция, клонирующая и заполняющая шаблон с данными похожих волшебников
+* @function fillSImilarWizardsTemplate
+* @return {object} fragment — document fragment с заполненными шаблонами волшебников
+*/
+function fillSimilarWizardsTemplate() {
+  for (var i = 0; i < 4; i++) {
+    var wizard = wizardTemplate.cloneNode(true);
+
+    wizard.querySelector('.setup-similar-label').textContent = similarWizards[i].name;
+    wizard.querySelector('.wizard-coat').style.fill = similarWizards[i].coatColor;
+    wizard.querySelector('.wizard-eyes').style.fill = similarWizards[i].eyesColor;
+    fragment.appendChild(wizard);
+  }
+
+  return fragment;
+}
+
 //
 //
 // Получение и отображение скрытого модального окна с настройками персонажей
-var setupModal = document.querySelector('.setup');
-setupModal.classList.remove('hidden');
+var playerSetup = document.querySelector('.setup');
+playerSetup.classList.remove('hidden');
 
 // Получение и заполнение данными шаблона похожих персонажей
 // 4 заполненных шаблона с волшебниками уходят во fragment -> fragment в список wizardsList ->
@@ -77,16 +102,8 @@ var wizardTemplate = document.querySelector('#similar-wizard-template').content;
 var wizardsList = document.querySelector('.setup-similar-list');
 var fragment = document.createDocumentFragment();
 
-for (var j = 0; j < 4; j++) {
-  var wizard = wizardTemplate.cloneNode(true);
-
-  wizard.querySelector('.setup-similar-label').textContent = similarWizards[j].name;
-  wizard.querySelector('.wizard-coat').style.fill = similarWizards[j].coatColor;
-  wizard.querySelector('.wizard-eyes').style.fill = similarWizards[j].eyesColor;
-  fragment.appendChild(wizard);
-}
-
+fillSimilarWizardsTemplate();
 wizardsList.appendChild(fragment);
 
-var wizardsSection = setupModal.querySelector('.setup-similar');
+var wizardsSection = playerSetup.querySelector('.setup-similar');
 wizardsSection.classList.remove('hidden');
