@@ -121,8 +121,8 @@ function getMaxElement(someArray) {
 */
 function getRandomNumber(min, max, precision) {
   var randomFloat = Math.random() * (max - min) + min;
-  // eslint-disable-next-line no-undefined
-  if (precision === undefined || precision === 0 || isNaN(precision)) {
+
+  if (precision === void 0 || precision === 0 || isNaN(precision)) {
     return randomFloat;
   } else {
     return randomFloat.toFixed(precision);
