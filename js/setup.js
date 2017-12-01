@@ -103,7 +103,7 @@ function getRandomEyesColor(colorsArray) {
 
 /**
 * Функция, заполнящая Document Fragment данными похожих волшебников (оформленными шаблонами).
-* @function fillSImilarWizardsTemplate
+* @function fillSimilarWizardsTemplate
 * @return {object} fragment — document fragment с 4-мя шаблонами
 */
 function fillSimilarWizardsTemplate() {
@@ -131,28 +131,42 @@ var ENTER_KEYCODE = 13;
 
 // Открытие окна
 playerSetupOpenButton.addEventListener('click', function () {
-  playerSetup.classList.remove('hidden');
+  openPlayerSetup();
 });
 playerSetupOpenButton.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
-    playerSetup.classList.remove('hidden');
+    openPlayerSetup();
   }
 });
 
+/**
+* Функция, открывающая окно с настройками игрока
+*/
+function openPlayerSetup() {
+  playerSetup.classList.remove('hidden');
+}
+
 // Закрытие окна
 playerSetupCloseButton.addEventListener('click', function () {
-  playerSetup.classList.add('hidden');
+  closePlayerSetup();
 });
 playerSetupCloseButton.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
-    playerSetup.classList.add('hidden');
+    closePlayerSetup();
   }
 });
 window.addEventListener('keydown', function (evt) {
   if (playerSetup.classList.contains('hidden') === false && evt.keyCode === ESC_KEYCODE) {
-    playerSetup.classList.add('hidden');
+    closePlayerSetup();
   }
 });
+
+/**
+* Функция, закрывающая окно с настройками игрока
+*/
+function closePlayerSetup() {
+  playerSetup.classList.add('hidden');
+}
 
 // Получение и заполнение данными шаблона похожих персонажей
 // 4 заполненных шаблона с волшебниками уходят во fragment -> fragment в список wizardsList ->
