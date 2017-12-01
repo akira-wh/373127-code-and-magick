@@ -1,18 +1,48 @@
 'use strict';
 
 // Библиотеки с вариантами имен, фамилий, цветов одежды и глаз
-var availableNames = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-var availableSurenames = ['Де Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
-var availableCoatColors = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)',
-  'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
-var availableEyesColors = ['black', 'red', 'blue', 'yellow', 'green'];
+var availableNames = [
+  'Иван',
+  'Хуан Себастьян',
+  'Мария',
+  'Кристоф',
+  'Виктор',
+  'Юлия',
+  'Люпита',
+  'Вашингтон'
+];
+var availableSurenames = [
+  'Де Марья',
+  'Верон',
+  'Мирабелла',
+  'Вальц',
+  'Онопко',
+  'Топольницкая',
+  'Нионго',
+  'Ирвинг'
+];
+var availableCoatColors = [
+  'rgb(101, 137, 164)',
+  'rgb(241, 43, 107)',
+  'rgb(146, 100, 161)',
+  'rgb(56, 159, 117)',
+  'rgb(215, 210, 55)',
+  'rgb(0, 0, 0)'
+];
+var availableEyesColors = [
+  'black',
+  'red',
+  'blue',
+  'yellow',
+  'green'
+];
 
-// Массив персонажей, заполняющийся в цикле 4-мя похожими магами (объектами со сгенерированными свойствами)
+// Массив похожих персонажей
 var similarWizards = [];
 generateSimilarWizards();
 
 /**
-* Функция, заполняющая массив с похожими волшебниками сгенерированными объектами этих волшебников
+* Функция, заполняющая массив похожих персонажей сгенерированными объектами этих персонажей
 * @function generateSimilarWizards
 */
 function generateSimilarWizards() {
@@ -36,6 +66,15 @@ function getRandomName(namesArray, surenamesArray) {
   var characterName = namesArray[getRandomIndex(counterLimit)];
   var characterSurename = surenamesArray[getRandomIndex(counterLimit)];
   return characterName + ' ' + characterSurename;
+}
+
+/**
+* Функция, генерирующая случайное целое число в диапазоне от 0 до установленного максимума
+* @param {number} counterLimit — максимально возможное число
+* @return {number} — искомое случайное число
+*/
+function getRandomIndex(counterLimit) {
+  return Math.round(0 - 0.5 + Math.random() * (counterLimit + 1));
 }
 
 /**
@@ -63,18 +102,9 @@ function getRandomEyesColor(colorsArray) {
 }
 
 /**
-* Функция, генерирующая случайное целое число от 0 и до установленного в параметре максимума
-* @param {number} counterLimit — максимальное число (потолок диапазона)
-* @return {number} — искомое случайное число
-*/
-function getRandomIndex(counterLimit) {
-  return Math.round(0 - 0.5 + Math.random() * (counterLimit + 1));
-}
-
-/**
-* Функция, клонирующая и заполняющая шаблон с данными похожих волшебников
+* Функция, заполнящая Document Fragment данными похожих волшебников (оформленными шаблонами).
 * @function fillSImilarWizardsTemplate
-* @return {object} fragment — document fragment с заполненными шаблонами волшебников
+* @return {object} fragment — document fragment с 4-мя шаблонами
 */
 function fillSimilarWizardsTemplate() {
   for (var i = 0; i < 4; i++) {
@@ -91,9 +121,38 @@ function fillSimilarWizardsTemplate() {
 
 //
 //
-// Получение и отображение скрытого модального окна с настройками персонажей
+// Управление окном настроек игрока (открытие\закрытие по событиям)
 var playerSetup = document.querySelector('.setup');
-playerSetup.classList.remove('hidden');
+var playerSetupOpenButton = document.querySelector('.setup-open');
+var playerSetupCloseButton = playerSetup.querySelector('.setup-close');
+
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
+// Открытие окна
+playerSetupOpenButton.addEventListener('click', function () {
+  playerSetup.classList.remove('hidden');
+});
+playerSetupOpenButton.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    playerSetup.classList.remove('hidden');
+  }
+});
+
+// Закрытие окна
+playerSetupCloseButton.addEventListener('click', function () {
+  playerSetup.classList.add('hidden');
+});
+playerSetupCloseButton.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    playerSetup.classList.add('hidden');
+  }
+});
+window.addEventListener('keydown', function (evt) {
+  if (playerSetup.classList.contains('hidden') === false && evt.keyCode === ESC_KEYCODE) {
+    playerSetup.classList.add('hidden');
+  }
+});
 
 // Получение и заполнение данными шаблона похожих персонажей
 // 4 заполненных шаблона с волшебниками уходят во fragment -> fragment в список wizardsList ->
