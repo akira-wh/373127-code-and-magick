@@ -36,6 +36,13 @@ var availableEyesColors = [
   'yellow',
   'green'
 ];
+var availableFireballColors = [
+  '#ee4830',
+  '#30a8ee',
+  '#5ce6c0',
+  '#e848d5',
+  '#e6e848'
+];
 
 // Массив похожих персонажей
 var similarWizards = [];
@@ -193,3 +200,56 @@ userNameInput.addEventListener('invalid', function () {
     userNameInput.setCustomValidity('Это поле обязательно к заполнению.');
   }
 });
+
+// Выбор цвета мантии для пользовательского персонажа
+var userCoat = document.querySelector('.setup-player .wizard-coat');
+var userCoatInput = document.querySelector('.setup-player input[name="coat-color"]');
+
+userCoat.addEventListener('click', function () {
+  var userCoatCurrentColor = userCoatInput.value;
+  userCoatInput.value = changeColor(userCoatCurrentColor, availableCoatColors);
+  userCoat.style.fill = userCoatInput.value;
+});
+
+// Выбор цвета глаз для пользовательского персонажа
+var userEyes = document.querySelector('.setup-player .wizard-eyes');
+var userEyesInput = document.querySelector('.setup-player input[name="eyes-color"]');
+
+userEyes.addEventListener('click', function () {
+  var userEyesCurrentColor = userEyesInput.value;
+  userEyesInput.value = changeColor(userEyesCurrentColor, availableEyesColors);
+  userEyes.style.fill = userEyesInput.value;
+});
+
+// Выбор цвета файерболов для пользовательского персонажа
+// Главное значение цвета содержится в value у input,
+// затем оно дублируется в стили обёртки и визуализируется.
+var userFireball = document.querySelector('.setup-player .setup-fireball-wrap');
+var userFireballInput = userFireball.querySelector('input[name="fireball-color"]');
+
+userFireball.addEventListener('click', function () {
+  var userFireballCurrentColor = userFireballInput.value;
+  userFireballInput.value = changeColor(userFireballCurrentColor, availableFireballColors);
+  userFireball.style.backgroundColor = userFireballInput.value;
+});
+
+/**
+* Функция, менящая цвета по порядку их следования во входных массивах (loop)
+* @param {object} currentColor — объект, чей цвет подлежит изменению (получение текущего цвета и замена на следующий)
+* @param {array} availableColors — входной массив с доступными цветами
+* @return {string} availableColors[currentIndex] — следующий цвет
+*/
+function changeColor(currentColor, availableColors) {
+  var arrayLimitValue = availableColors.length - 1;
+  var currentIndex = availableColors.indexOf(currentColor);
+
+  if (currentIndex < arrayLimitValue && currentIndex !== -1) {
+    currentIndex++;
+  } else if (currentIndex === arrayLimitValue) {
+    currentIndex = 0;
+  } else if (currentIndex === -1) {
+    currentIndex = 2;
+  }
+
+  return availableColors[currentIndex];
+}
