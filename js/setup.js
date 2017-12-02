@@ -101,24 +101,6 @@ function getRandomEyesColor(colorsArray) {
   return eyesColor;
 }
 
-/**
-* Функция, заполнящая Document Fragment данными похожих волшебников (оформленными шаблонами).
-* @function fillSimilarWizardsTemplate
-* @return {object} fragment — document fragment с 4-мя шаблонами
-*/
-function fillSimilarWizardsTemplate() {
-  for (var i = 0; i < 4; i++) {
-    var wizard = wizardTemplate.cloneNode(true);
-
-    wizard.querySelector('.setup-similar-label').textContent = similarWizards[i].name;
-    wizard.querySelector('.wizard-coat').style.fill = similarWizards[i].coatColor;
-    wizard.querySelector('.wizard-eyes').style.fill = similarWizards[i].eyesColor;
-    fragment.appendChild(wizard);
-  }
-
-  return fragment;
-}
-
 //
 //
 // Управление окном настроек игрока (открытие\закрытие по событиям)
@@ -178,5 +160,36 @@ var fragment = document.createDocumentFragment();
 fillSimilarWizardsTemplate();
 wizardsList.appendChild(fragment);
 
+/**
+* Функция, заполнящая Document Fragment данными похожих волшебников (оформленными шаблонами).
+* @function fillSimilarWizardsTemplate
+* @return {object} fragment — document fragment с 4-мя шаблонами
+*/
+function fillSimilarWizardsTemplate() {
+  for (var i = 0; i < 4; i++) {
+    var wizard = wizardTemplate.cloneNode(true);
+
+    wizard.querySelector('.setup-similar-label').textContent = similarWizards[i].name;
+    wizard.querySelector('.wizard-coat').style.fill = similarWizards[i].coatColor;
+    wizard.querySelector('.wizard-eyes').style.fill = similarWizards[i].eyesColor;
+    fragment.appendChild(wizard);
+  }
+
+  return fragment;
+}
+
 var wizardsSection = playerSetup.querySelector('.setup-similar');
 wizardsSection.classList.remove('hidden');
+
+// Проверка валидности пользовательских настроек персонажа
+var userNameInput = playerSetup.querySelector('.setup-user-name');
+
+userNameInput.addEventListener('invalid', function () {
+  if (userNameInput.validity.tooShort) {
+    userNameInput.setCustomValidity('Имя персонажа слишком короткое (менее 2-х символов).');
+  } else if (userNameInput.validity.tooLong) {
+    userNameInput.setCustomValidity('Имя персонажа слишком длинное (ограничение — 25 символов).');
+  } else if (userNameInput.validity.valueMissing) {
+    userNameInput.setCustomValidity('Это поле обязательно к заполнению.');
+  }
+});
