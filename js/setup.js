@@ -85,7 +85,9 @@ function getRandomName(namesArray, surenamesArray) {
 * @return {number} — искомое случайное число
 */
 function getRandomIndex(counterLimit) {
-  return Math.round(0 - 0.5 + Math.random() * (counterLimit + 1));
+  var result = Math.random() * (counterLimit + 1);
+  result = Math.floor(result);
+  return result;
 }
 
 /**
@@ -129,13 +131,6 @@ playerSetupOpenButton.addEventListener('keydown', function (evt) {
   }
 });
 
-/**
-* Функция, открывающая окно с настройками игрока
-*/
-function openPlayerSetup() {
-  playerSetup.classList.remove('hidden');
-}
-
 // Закрытие окна
 playerSetupCloseButton.addEventListener('click', function () {
   closePlayerSetup();
@@ -150,6 +145,13 @@ window.addEventListener('keydown', function (evt) {
     closePlayerSetup();
   }
 });
+
+/**
+* Функция, открывающая окно с настройками игрока
+*/
+function openPlayerSetup() {
+  playerSetup.classList.remove('hidden');
+}
 
 /**
 * Функция, закрывающая окно с настройками игрока
