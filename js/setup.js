@@ -1,5 +1,9 @@
 'use strict';
 
+// Константы
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
 // Библиотеки с вариантами имен, фамилий, цветов одежды и глаз
 var availableNames = [
   'Иван',
@@ -114,9 +118,6 @@ function getRandomEyesColor(colorsArray) {
 var playerSetup = document.querySelector('.setup');
 var playerSetupOpenButton = document.querySelector('.setup-open');
 var playerSetupCloseButton = playerSetup.querySelector('.setup-close');
-
-var ESC_KEYCODE = 27;
-var ENTER_KEYCODE = 13;
 
 // Открытие окна
 playerSetupOpenButton.addEventListener('click', function () {
