@@ -71,10 +71,11 @@ generateSimilarWizards(4, similarWizards);
 */
 function generateSimilarWizards(expectedNumber, destinationArray) {
   for (var i = 0; i < expectedNumber; i++) {
-    destinationArray[i] = {};
-    destinationArray[i].name = getRandomName(availableNames, availableSurenames);
-    destinationArray[i].coatColor = getRandomCoatColor(availableCoatColors);
-    destinationArray[i].eyesColor = getRandomEyesColor(availableEyesColors);
+    destinationArray[i] = {
+      name: getRandomName(availableNames, availableSurenames),
+      coatColor: getRandomCoatColor(availableCoatColors),
+      eyesColor: getRandomEyesColor(availableEyesColors)
+    };
   }
 }
 
