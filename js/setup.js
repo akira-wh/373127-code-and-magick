@@ -299,9 +299,9 @@ var userNameInput = playerSetup.querySelector('.setup-user-name');
 
 userNameInput.addEventListener('input', function () {
   if (userNameInput.validity.tooShort) {
-    userNameInput.setCustomValidity('Имя игрока слишком короткое (менее 2-х символов).');
+    userNameInput.setCustomValidity('Введенное имя слишком короткое (менее 2-х символов).');
   } else if (userNameInput.validity.tooLong) {
-    userNameInput.setCustomValidity('Имя игрока слишком длинное (ограничение — 25 символов).');
+    userNameInput.setCustomValidity('Введенное имя слишком длинное (ограничение — 25 символов).');
   } else if (userNameInput.validity.valueMissing) {
     userNameInput.setCustomValidity('Это поле обязательно к заполнению.');
   } else {
