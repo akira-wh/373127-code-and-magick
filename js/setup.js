@@ -184,30 +184,30 @@ var playerSetupCloseButton = playerSetup.querySelector('.setup-close');
 // Механика открытия окна
 playerSetupOpenButton.addEventListener('click', function () {
   openPlayerSetup();
+  window.addEventListener('keydown', onPlayerSetupEscPress);
 });
 playerSetupOpenButton.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     openPlayerSetup();
+    window.addEventListener('keydown', onPlayerSetupEscPress);
   }
 });
 
-// Механика закрытие окна
+// Механика закрытия окна
 playerSetupCloseButton.addEventListener('click', function () {
   closePlayerSetup();
+  window.removeEventListener('keydown', onPlayerSetupEscPress);
 });
 playerSetupCloseButton.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     closePlayerSetup();
-  }
-});
-window.addEventListener('keydown', function (evt) {
-  if (playerSetup.classList.contains('hidden') === false && evt.keyCode === ESC_KEYCODE) {
-    closePlayerSetup();
+    window.removeEventListener('keydown', onPlayerSetupEscPress);
   }
 });
 
 /**
 * Функция, открывающая окно с настройками игрока
+* @function openPlayerSetup
 */
 function openPlayerSetup() {
   playerSetup.classList.remove('hidden');
@@ -215,12 +215,22 @@ function openPlayerSetup() {
 
 /**
 * Функция, закрывающая окно с настройками игрока
+* @function closePlayerSetup
 */
 function closePlayerSetup() {
   playerSetup.classList.add('hidden');
 }
 
-
+/**
+* Функция, закрывающая окно с настройками игрока по нажатию клавиши ESC
+* @function onPlayerSetupEscPress
+* @param {object} evt — объект события
+*/
+function onPlayerSetupEscPress(evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePlayerSetup();
+  }
+}
 /*
 ***********************************************************************************
 ***********************************************************************************
