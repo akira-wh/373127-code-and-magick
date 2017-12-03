@@ -4,7 +4,7 @@
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
-// Библиотеки с вариантами имен, фамилий, цветов одежды и глаз
+// Библиотеки с вариантами имен, фамилий, цветов одежды, глаз и файерболов
 var availableNames = [
   'Иван',
   'Хуан Себастьян',
@@ -48,16 +48,28 @@ var availableFireballColors = [
   '#e6e848'
 ];
 
-// Массив похожих персонажей
+
+/*
+***********************************************************************************
+***********************************************************************************
+***
+***       РАБОТА С ПОХОЖИМИ ВОЛШЕБНИКАМИ (СОЗДАНИЕ, ВСТАВКА В РАЗМЕТКУ etc).
+***
+***********************************************************************************
+***********************************************************************************
+*/
+
+// Создание и заполнение массива похожих персонажей (заполняется объектами)
 var similarWizards = [];
-generateSimilarWizards();
+generateSimilarWizards(4);
 
 /**
-* Функция, заполняющая массив похожих персонажей сгенерированными объектами этих персонажей
+* Функция, заполняющая массив similarWizards сгенерированными объектами персонажей
 * @function generateSimilarWizards
+* @param {number} expectedNumber — необходимое количество сгенерированных объектов
 */
-function generateSimilarWizards() {
-  for (var i = 0; i < 4; i++) {
+function generateSimilarWizards(expectedNumber) {
+  for (var i = 0; i < expectedNumber; i++) {
     similarWizards[i] = {};
     similarWizards[i].name = getRandomName(availableNames, availableSurenames);
     similarWizards[i].coatColor = getRandomCoatColor(availableCoatColors);
@@ -66,7 +78,7 @@ function generateSimilarWizards() {
 }
 
 /**
-* Функция получения рандомных имени и фамилии для персонажа (вызывает доп. функцию getRandomIndex)
+* Функция получения рандомных имени и фамилии для персонажа
 * @function getRandomName
 * @param {array} namesArray — входной массив с доступными именами
 * @param {array} surenamesArray — входной массив с доступными фамилиями
@@ -76,6 +88,7 @@ function getRandomName(namesArray, surenamesArray) {
   var counterLimit = namesArray.length - 1;
   var characterName = namesArray[getRandomIndex(counterLimit)];
   var characterSurename = surenamesArray[getRandomIndex(counterLimit)];
+
   return characterName + ' ' + characterSurename;
 }
 
@@ -87,11 +100,12 @@ function getRandomName(namesArray, surenamesArray) {
 function getRandomIndex(counterLimit) {
   var result = Math.random() * (counterLimit + 1);
   result = Math.floor(result);
+
   return result;
 }
 
 /**
-* Функция получения рандомного цвета одежды для персонажа (вызывает доп. функцию getRandomIndex)
+* Функция получения рандомного цвета одежды для персонажа
 * @function getRandomCoatColor
 * @param {array} colorsArray — входной массив с доступными цветами
 * @return {string} — сгенерированный цвет одежды
@@ -99,11 +113,12 @@ function getRandomIndex(counterLimit) {
 function getRandomCoatColor(colorsArray) {
   var counterLimit = colorsArray.length - 1;
   var coatColor = colorsArray[getRandomIndex(counterLimit)];
+
   return coatColor;
 }
 
 /**
-* Функция получения рандомного цвета глаз для персонажа (вызывает доп. функцию getRandomIndex)
+* Функция получения рандомного цвета глаз для персонажа
 * @function getRandomEyesColor
 * @param {array} colorsArray — входной массив с доступными цветами
 * @return {string} — сгенерированный цвет глаз
@@ -111,17 +126,60 @@ function getRandomCoatColor(colorsArray) {
 function getRandomEyesColor(colorsArray) {
   var counterLimit = colorsArray.length - 1;
   var eyesColor = colorsArray[getRandomIndex(counterLimit)];
+
   return eyesColor;
 }
 
+// Получение, копирование и заполнение шаблонов с похожими волшебниками
+// Вставка результата в соответствующий список в разметке.
 //
-//
-// Управление окном настроек игрока (открытие\закрытие по событиям)
+// 4 готовых шаблона уходят во fragment -> fragment в список wizardsList ->
+// -> wizardsList в секцию wizardsSection -> wizardsSection отрисовывается пользователю
+var wizardTemplate = document.querySelector('#similar-wizard-template').content;
+var wizardsSection = document.querySelector('.setup-similar');
+var wizardsList = wizardsSection.querySelector('.setup-similar-list');
+
+wizardsList.appendChild(fillSimilarWizardsTemplate(4));
+wizardsSection.classList.remove('hidden');
+
+/**
+* Функция, создающая Document Fragment и заполняющая его данными персонажей.
+* @function fillSimilarWizardsTemplate
+* @param {number} expectedNumber — необходимое количество заполненых шаблонов во фрагменте
+* @return {object} fragment — document fragment с готовыми шаблонами
+*/
+function fillSimilarWizardsTemplate(expectedNumber) {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < expectedNumber; i++) {
+    var wizard = wizardTemplate.cloneNode(true);
+
+    wizard.querySelector('.setup-similar-label').textContent = similarWizards[i].name;
+    wizard.querySelector('.wizard-coat').style.fill = similarWizards[i].coatColor;
+    wizard.querySelector('.wizard-eyes').style.fill = similarWizards[i].eyesColor;
+    fragment.appendChild(wizard);
+  }
+
+  return fragment;
+}
+
+
+/*
+***********************************************************************************
+***********************************************************************************
+***
+***                 УПРАВЛЕНИЕ ОКНОМ НАСТРОЕК ИГРОКА (СОБЫТИЯ etc).
+***
+***********************************************************************************
+***********************************************************************************
+*/
+
+// Получение непосредственно окна и управляющих кнопок
 var playerSetup = document.querySelector('.setup');
 var playerSetupOpenButton = document.querySelector('.setup-open');
 var playerSetupCloseButton = playerSetup.querySelector('.setup-close');
 
-// Открытие окна
+// Механика открытия окна
 playerSetupOpenButton.addEventListener('click', function () {
   openPlayerSetup();
 });
@@ -131,7 +189,7 @@ playerSetupOpenButton.addEventListener('keydown', function (evt) {
   }
 });
 
-// Закрытие окна
+// Механика закрытие окна
 playerSetupCloseButton.addEventListener('click', function () {
   closePlayerSetup();
 });
@@ -160,85 +218,53 @@ function closePlayerSetup() {
   playerSetup.classList.add('hidden');
 }
 
-// Получение и заполнение данными шаблона похожих персонажей
-// 4 заполненных шаблона с волшебниками уходят во fragment -> fragment в список wizardsList ->
-// -> wizardsList в секцию wizardsSection -> wizardsSection отрисовывается на странице
-var wizardTemplate = document.querySelector('#similar-wizard-template').content;
-var wizardsList = document.querySelector('.setup-similar-list');
-var fragment = document.createDocumentFragment();
 
-fillSimilarWizardsTemplate();
-wizardsList.appendChild(fragment);
-
-/**
-* Функция, заполнящая Document Fragment данными похожих волшебников (оформленными шаблонами).
-* @function fillSimilarWizardsTemplate
-* @return {object} fragment — document fragment с 4-мя шаблонами
+/*
+***********************************************************************************
+***********************************************************************************
+***
+***      ОСНОВНЫЕ НАСТРОЙКИ ИГРОКА (ВЫБОР ЦВЕТОВ, ОБНОВЛЕНИЕ ЗНАЧЕНИЙ ФОРМЫ).
+***
+***********************************************************************************
+***********************************************************************************
 */
-function fillSimilarWizardsTemplate() {
-  for (var i = 0; i < 4; i++) {
-    var wizard = wizardTemplate.cloneNode(true);
-
-    wizard.querySelector('.setup-similar-label').textContent = similarWizards[i].name;
-    wizard.querySelector('.wizard-coat').style.fill = similarWizards[i].coatColor;
-    wizard.querySelector('.wizard-eyes').style.fill = similarWizards[i].eyesColor;
-    fragment.appendChild(wizard);
-  }
-
-  return fragment;
-}
-
-var wizardsSection = playerSetup.querySelector('.setup-similar');
-wizardsSection.classList.remove('hidden');
-
-// Проверка валидности пользовательских настроек персонажа
-var userNameInput = playerSetup.querySelector('.setup-user-name');
-
-userNameInput.addEventListener('invalid', function () {
-  if (userNameInput.validity.tooShort) {
-    userNameInput.setCustomValidity('Имя персонажа слишком короткое (менее 2-х символов).');
-  } else if (userNameInput.validity.tooLong) {
-    userNameInput.setCustomValidity('Имя персонажа слишком длинное (ограничение — 25 символов).');
-  } else if (userNameInput.validity.valueMissing) {
-    userNameInput.setCustomValidity('Это поле обязательно к заполнению.');
-  }
-});
 
 // Выбор цвета мантии для пользовательского персонажа
-var userCoat = document.querySelector('.setup-player .wizard-coat');
+// Обновление значения скрытого input формы
+var userCoatCover = document.querySelector('.setup-player .wizard-coat');
 var userCoatInput = document.querySelector('.setup-player input[name="coat-color"]');
 
-userCoat.addEventListener('click', function () {
+userCoatCover.addEventListener('click', function () {
   var userCoatCurrentColor = userCoatInput.value;
   userCoatInput.value = changeColor(userCoatCurrentColor, availableCoatColors);
-  userCoat.style.fill = userCoatInput.value;
+  userCoatCover.style.fill = userCoatInput.value;
 });
 
 // Выбор цвета глаз для пользовательского персонажа
-var userEyes = document.querySelector('.setup-player .wizard-eyes');
+// Обновление значения скрытого input формы
+var userEyesCover = document.querySelector('.setup-player .wizard-eyes');
 var userEyesInput = document.querySelector('.setup-player input[name="eyes-color"]');
 
-userEyes.addEventListener('click', function () {
+userEyesCover.addEventListener('click', function () {
   var userEyesCurrentColor = userEyesInput.value;
   userEyesInput.value = changeColor(userEyesCurrentColor, availableEyesColors);
-  userEyes.style.fill = userEyesInput.value;
+  userEyesCover.style.fill = userEyesInput.value;
 });
 
 // Выбор цвета файерболов для пользовательского персонажа
-// Главное значение цвета содержится в value у input,
-// затем оно дублируется в стили обёртки и визуализируется.
-var userFireball = document.querySelector('.setup-player .setup-fireball-wrap');
-var userFireballInput = userFireball.querySelector('input[name="fireball-color"]');
+// Обновление значения скрытого input формы
+var userFireballCover = document.querySelector('.setup-player .setup-fireball-wrap');
+var userFireballInput = userFireballCover.querySelector('input[name="fireball-color"]');
 
-userFireball.addEventListener('click', function () {
+userFireballCover.addEventListener('click', function () {
   var userFireballCurrentColor = userFireballInput.value;
   userFireballInput.value = changeColor(userFireballCurrentColor, availableFireballColors);
-  userFireball.style.backgroundColor = userFireballInput.value;
+  userFireballCover.style.backgroundColor = userFireballInput.value;
 });
 
 /**
 * Функция, менящая цвета по порядку их следования во входных массивах (loop)
-* @param {object} currentColor — объект, чей цвет подлежит изменению (получение текущего цвета и замена на следующий)
+* @param {string} currentColor — текущий цвет, подлежащий изменению
 * @param {array} availableColors — входной массив с доступными цветами
 * @return {string} availableColors[currentIndex] — следующий цвет
 */
@@ -256,3 +282,29 @@ function changeColor(currentColor, availableColors) {
 
   return availableColors[currentIndex];
 }
+
+
+/*
+***********************************************************************************
+***********************************************************************************
+***
+***               ВАЛИДАЦИЯ ТЕКСТОВЫХ ДАННЫХ ПРИ НАСТРОЙКЕ ИГРОКА.
+***
+***********************************************************************************
+***********************************************************************************
+*/
+
+// Проверка валидности имени пользователя
+var userNameInput = playerSetup.querySelector('.setup-user-name');
+
+userNameInput.addEventListener('input', function () {
+  if (userNameInput.validity.tooShort) {
+    userNameInput.setCustomValidity('Имя игрока слишком короткое (менее 2-х символов).');
+  } else if (userNameInput.validity.tooLong) {
+    userNameInput.setCustomValidity('Имя игрока слишком длинное (ограничение — 25 символов).');
+  } else if (userNameInput.validity.valueMissing) {
+    userNameInput.setCustomValidity('Это поле обязательно к заполнению.');
+  } else {
+    userNameInput.setCustomValidity('');
+  }
+});
