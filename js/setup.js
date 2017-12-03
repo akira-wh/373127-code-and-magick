@@ -110,7 +110,7 @@ function getRandomIndex(counterLimit) {
 * Функция получения рандомного цвета одежды для персонажа
 * @function getRandomCoatColor
 * @param {array} colorsArray — входной массив с доступными цветами
-* @return {string} — сгенерированный цвет одежды
+* @return {string} — искомый цвет одежды
 */
 function getRandomCoatColor(colorsArray) {
   var counterLimit = colorsArray.length - 1;
@@ -123,7 +123,7 @@ function getRandomCoatColor(colorsArray) {
 * Функция получения рандомного цвета глаз для персонажа
 * @function getRandomEyesColor
 * @param {array} colorsArray — входной массив с доступными цветами
-* @return {string} — сгенерированный цвет глаз
+* @return {string} — искомый цвет глаз
 */
 function getRandomEyesColor(colorsArray) {
   var counterLimit = colorsArray.length - 1;
@@ -242,40 +242,43 @@ function onPlayerSetupEscPress(evt) {
 */
 
 // Выбор цвета мантии для пользовательского персонажа
-// Обновление значения скрытого input формы
+// Обновление значения скрытого input в форме
 var userCoatCover = document.querySelector('.setup-player .wizard-coat');
 var userCoatInput = document.querySelector('.setup-player input[name="coat-color"]');
 
 userCoatCover.addEventListener('click', function () {
   var userCoatCurrentColor = userCoatInput.value;
+
   userCoatInput.value = changeColor(userCoatCurrentColor, availableCoatColors);
   userCoatCover.style.fill = userCoatInput.value;
 });
 
 // Выбор цвета глаз для пользовательского персонажа
-// Обновление значения скрытого input формы
+// Обновление значения скрытого input в форме
 var userEyesCover = document.querySelector('.setup-player .wizard-eyes');
 var userEyesInput = document.querySelector('.setup-player input[name="eyes-color"]');
 
 userEyesCover.addEventListener('click', function () {
   var userEyesCurrentColor = userEyesInput.value;
+
   userEyesInput.value = changeColor(userEyesCurrentColor, availableEyesColors);
   userEyesCover.style.fill = userEyesInput.value;
 });
 
 // Выбор цвета файерболов для пользовательского персонажа
-// Обновление значения скрытого input формы
+// Обновление значения скрытого input в форме
 var userFireballCover = document.querySelector('.setup-player .setup-fireball-wrap');
 var userFireballInput = userFireballCover.querySelector('input[name="fireball-color"]');
 
 userFireballCover.addEventListener('click', function () {
   var userFireballCurrentColor = userFireballInput.value;
+
   userFireballInput.value = changeColor(userFireballCurrentColor, availableFireballColors);
   userFireballCover.style.backgroundColor = userFireballInput.value;
 });
 
 /**
-* Функция, менящая цвета по порядку их следования во входных массивах (loop)
+* Функция, выдающая новые значения цветов из входного массива (работает последовательно и по кругу)
 * @param {string} currentColor — текущий цвет, подлежащий изменению
 * @param {array} availableColors — входной массив с доступными цветами
 * @return {string} availableColors[currentIndex] — следующий цвет
@@ -306,7 +309,7 @@ function changeColor(currentColor, availableColors) {
 ***********************************************************************************
 */
 
-// Проверка валидности имени пользователя
+// Проверка валидности пользовательского ввода (имя игрока)
 var userNameInput = playerSetup.querySelector('.setup-user-name');
 
 userNameInput.addEventListener('input', function () {
