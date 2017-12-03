@@ -61,19 +61,20 @@ var availableFireballColors = [
 
 // Создание и заполнение массива похожих персонажей (заполняется объектами)
 var similarWizards = [];
-generateSimilarWizards(4);
+generateSimilarWizards(4, similarWizards);
 
 /**
-* Функция, заполняющая массив similarWizards сгенерированными объектами персонажей
+* Функция, заполняющая целевой массив сгенерированными объектами персонажей
 * @function generateSimilarWizards
 * @param {number} expectedNumber — необходимое количество сгенерированных объектов
+* @param {array} destinationArray — целевой массив для заполнения
 */
-function generateSimilarWizards(expectedNumber) {
+function generateSimilarWizards(expectedNumber, destinationArray) {
   for (var i = 0; i < expectedNumber; i++) {
-    similarWizards[i] = {};
-    similarWizards[i].name = getRandomName(availableNames, availableSurenames);
-    similarWizards[i].coatColor = getRandomCoatColor(availableCoatColors);
-    similarWizards[i].eyesColor = getRandomEyesColor(availableEyesColors);
+    destinationArray[i] = {};
+    destinationArray[i].name = getRandomName(availableNames, availableSurenames);
+    destinationArray[i].coatColor = getRandomCoatColor(availableCoatColors);
+    destinationArray[i].eyesColor = getRandomEyesColor(availableEyesColors);
   }
 }
 
@@ -143,10 +144,10 @@ wizardsList.appendChild(fillSimilarWizardsTemplate(4));
 wizardsSection.classList.remove('hidden');
 
 /**
-* Функция, создающая Document Fragment и заполняющая его данными персонажей.
+* Функция, создающая Document Fragment и заполняющая его шаблонами персонажей.
 * @function fillSimilarWizardsTemplate
 * @param {number} expectedNumber — необходимое количество заполненых шаблонов во фрагменте
-* @return {object} fragment — document fragment с готовыми шаблонами
+* @return {object} fragment — document fragment с заполненными шаблонами
 */
 function fillSimilarWizardsTemplate(expectedNumber) {
   var fragment = document.createDocumentFragment();
