@@ -1,24 +1,86 @@
 'use strict';
 
-// Библиотеки с вариантами имен, фамилий, цветов одежды и глаз
-var availableNames = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-var availableSurenames = ['Де Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
-var availableCoatColors = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)',
-  'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
-var availableEyesColors = ['black', 'red', 'blue', 'yellow', 'green'];
+// Константы
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 
-// Массив персонажей, заполняющийся в цикле 4-мя похожими магами (объектами со сгенерированными свойствами)
+// Библиотеки с вариантами имен, фамилий, цветов одежды, глаз и файерболов
+var availableNames = [
+  'Иван',
+  'Хуан Себастьян',
+  'Мария',
+  'Кристоф',
+  'Виктор',
+  'Юлия',
+  'Люпита',
+  'Вашингтон'
+];
+var availableSurenames = [
+  'Де Марья',
+  'Верон',
+  'Мирабелла',
+  'Вальц',
+  'Онопко',
+  'Топольницкая',
+  'Нионго',
+  'Ирвинг'
+];
+var availableCoatColors = [
+  'rgb(101, 137, 164)',
+  'rgb(241, 43, 107)',
+  'rgb(146, 100, 161)',
+  'rgb(56, 159, 117)',
+  'rgb(215, 210, 55)',
+  'rgb(0, 0, 0)'
+];
+var availableEyesColors = [
+  'black',
+  'red',
+  'blue',
+  'yellow',
+  'green'
+];
+var availableFireballColors = [
+  '#ee4830',
+  '#30a8ee',
+  '#5ce6c0',
+  '#e848d5',
+  '#e6e848'
+];
+
+
+/*
+***********************************************************************************
+***********************************************************************************
+***
+***       РАБОТА С ПОХОЖИМИ ВОЛШЕБНИКАМИ (СОЗДАНИЕ, ВСТАВКА В РАЗМЕТКУ etc).
+***
+***********************************************************************************
+***********************************************************************************
+*/
+
+// Создание и заполнение массива похожих персонажей (заполняется объектами)
 var similarWizards = [];
+generateSimilarWizards(4, similarWizards);
 
-for (var i = 0; i < 4; i++) {
-  similarWizards[i] = {};
-  similarWizards[i].name = getRandomName(availableNames, availableSurenames);
-  similarWizards[i].coatColor = getRandomCoatColor(availableCoatColors);
-  similarWizards[i].eyesColor = getRandomEyesColor(availableEyesColors);
+/**
+* Функция, заполняющая целевой массив сгенерированными объектами персонажей
+* @function generateSimilarWizards
+* @param {number} expectedNumber — необходимое количество сгенерированных объектов
+* @param {array} destinationArray — целевой массив для заполнения
+*/
+function generateSimilarWizards(expectedNumber, destinationArray) {
+  for (var i = 0; i < expectedNumber; i++) {
+    destinationArray[i] = {
+      name: getRandomName(availableNames, availableSurenames),
+      coatColor: getRandomCoatColor(availableCoatColors),
+      eyesColor: getRandomEyesColor(availableEyesColors)
+    };
+  }
 }
 
 /**
-* Функция получения рандомных имени и фамилии для персонажа (вызывает доп. функцию getRandomIndex)
+* Функция получения рандомных имени и фамилии для персонажа
 * @function getRandomName
 * @param {array} namesArray — входной массив с доступными именами
 * @param {array} surenamesArray — входной массив с доступными фамилиями
@@ -28,65 +90,236 @@ function getRandomName(namesArray, surenamesArray) {
   var counterLimit = namesArray.length - 1;
   var characterName = namesArray[getRandomIndex(counterLimit)];
   var characterSurename = surenamesArray[getRandomIndex(counterLimit)];
+
   return characterName + ' ' + characterSurename;
 }
 
 /**
-* Функция получения рандомного цвета одежды для персонажа (вызывает доп. функцию getRandomIndex)
+* Функция, генерирующая случайное целое число в диапазоне от 0 до установленного максимума
+* @param {number} counterLimit — максимально возможное число
+* @return {number} — искомое случайное число
+*/
+function getRandomIndex(counterLimit) {
+  var result = Math.random() * (counterLimit + 1);
+  result = Math.floor(result);
+
+  return result;
+}
+
+/**
+* Функция получения рандомного цвета одежды для персонажа
 * @function getRandomCoatColor
 * @param {array} colorsArray — входной массив с доступными цветами
-* @return {string} — сгенерированный цвет одежды
+* @return {string} — искомый цвет одежды
 */
 function getRandomCoatColor(colorsArray) {
   var counterLimit = colorsArray.length - 1;
   var coatColor = colorsArray[getRandomIndex(counterLimit)];
+
   return coatColor;
 }
 
 /**
-* Функция получения рандомного цвета глаз для персонажа (вызывает доп. функцию getRandomIndex)
+* Функция получения рандомного цвета глаз для персонажа
 * @function getRandomEyesColor
 * @param {array} colorsArray — входной массив с доступными цветами
-* @return {string} — сгенерированный цвет глаз
+* @return {string} — искомый цвет глаз
 */
 function getRandomEyesColor(colorsArray) {
   var counterLimit = colorsArray.length - 1;
   var eyesColor = colorsArray[getRandomIndex(counterLimit)];
+
   return eyesColor;
 }
 
-/**
-* Функция, генерирующая случайное целое число от 0 и до установленного в параметре максимума
-* @param {number} counterLimit — максимальное число (потолок диапазона)
-* @return {number} — искомое случайное число
-*/
-function getRandomIndex(counterLimit) {
-  return Math.round(0 - 0.5 + Math.random() * (counterLimit + 1));
-}
-
+// Получение, копирование и заполнение шаблонов с похожими волшебниками
+// Вставка результата в соответствующий список в разметке.
 //
-//
-// Получение и отображение скрытого модального окна с настройками персонажей
-var setupModal = document.querySelector('.setup');
-setupModal.classList.remove('hidden');
-
-// Получение и заполнение данными шаблона похожих персонажей
-// 4 заполненных шаблона с волшебниками уходят во fragment -> fragment в список wizardsList ->
-// -> wizardsList в секцию wizardsSection -> wizardsSection отрисовывается на странице
+// 4 готовых шаблона уходят во fragment -> fragment в список wizardsList ->
+// -> wizardsList в секцию wizardsSection -> wizardsSection отрисовывается пользователю
 var wizardTemplate = document.querySelector('#similar-wizard-template').content;
-var wizardsList = document.querySelector('.setup-similar-list');
-var fragment = document.createDocumentFragment();
+var wizardsSection = document.querySelector('.setup-similar');
+var wizardsList = wizardsSection.querySelector('.setup-similar-list');
 
-for (var j = 0; j < 4; j++) {
-  var wizard = wizardTemplate.cloneNode(true);
+wizardsList.appendChild(fillSimilarWizardsTemplate(4));
+wizardsSection.classList.remove('hidden');
 
-  wizard.querySelector('.setup-similar-label').textContent = similarWizards[j].name;
-  wizard.querySelector('.wizard-coat').style.fill = similarWizards[j].coatColor;
-  wizard.querySelector('.wizard-eyes').style.fill = similarWizards[j].eyesColor;
-  fragment.appendChild(wizard);
+/**
+* Функция, создающая Document Fragment и заполняющая его шаблонами персонажей.
+* @function fillSimilarWizardsTemplate
+* @param {number} expectedNumber — необходимое количество заполненых шаблонов во фрагменте
+* @return {object} fragment — document fragment с заполненными шаблонами
+*/
+function fillSimilarWizardsTemplate(expectedNumber) {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < expectedNumber; i++) {
+    var wizard = wizardTemplate.cloneNode(true);
+
+    wizard.querySelector('.setup-similar-label').textContent = similarWizards[i].name;
+    wizard.querySelector('.wizard-coat').style.fill = similarWizards[i].coatColor;
+    wizard.querySelector('.wizard-eyes').style.fill = similarWizards[i].eyesColor;
+    fragment.appendChild(wizard);
+  }
+
+  return fragment;
 }
 
-wizardsList.appendChild(fragment);
 
-var wizardsSection = setupModal.querySelector('.setup-similar');
-wizardsSection.classList.remove('hidden');
+/*
+***********************************************************************************
+***********************************************************************************
+***
+***                 УПРАВЛЕНИЕ ОКНОМ НАСТРОЕК ИГРОКА (СОБЫТИЯ etc).
+***
+***********************************************************************************
+***********************************************************************************
+*/
+
+// Получение непосредственно окна и управляющих кнопок
+var playerSetup = document.querySelector('.setup');
+var playerSetupOpenButton = document.querySelector('.setup-open');
+var playerSetupCloseButton = playerSetup.querySelector('.setup-close');
+
+// Механика открытия окна
+playerSetupOpenButton.addEventListener('click', function () {
+  openPlayerSetup();
+  window.addEventListener('keydown', onPlayerSetupEscPress);
+});
+playerSetupOpenButton.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    openPlayerSetup();
+    window.addEventListener('keydown', onPlayerSetupEscPress);
+  }
+});
+
+// Механика закрытия окна
+playerSetupCloseButton.addEventListener('click', function () {
+  closePlayerSetup();
+  window.removeEventListener('keydown', onPlayerSetupEscPress);
+});
+playerSetupCloseButton.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closePlayerSetup();
+    window.removeEventListener('keydown', onPlayerSetupEscPress);
+  }
+});
+
+/**
+* Функция, открывающая окно с настройками игрока
+* @function openPlayerSetup
+*/
+function openPlayerSetup() {
+  playerSetup.classList.remove('hidden');
+}
+
+/**
+* Функция, закрывающая окно с настройками игрока
+* @function closePlayerSetup
+*/
+function closePlayerSetup() {
+  playerSetup.classList.add('hidden');
+}
+
+/**
+* Функция, закрывающая окно с настройками игрока по нажатию клавиши ESC
+* @function onPlayerSetupEscPress
+* @param {object} evt — объект события
+*/
+function onPlayerSetupEscPress(evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePlayerSetup();
+  }
+}
+/*
+***********************************************************************************
+***********************************************************************************
+***
+***      ОСНОВНЫЕ НАСТРОЙКИ ИГРОКА (ВЫБОР ЦВЕТОВ, ОБНОВЛЕНИЕ ЗНАЧЕНИЙ ФОРМЫ).
+***
+***********************************************************************************
+***********************************************************************************
+*/
+
+// Выбор цвета мантии для пользовательского персонажа
+// Обновление значения скрытого input в форме
+var userCoatCover = document.querySelector('.setup-player .wizard-coat');
+var userCoatInput = document.querySelector('.setup-player input[name="coat-color"]');
+
+userCoatCover.addEventListener('click', function () {
+  var userCoatCurrentColor = userCoatInput.value;
+
+  userCoatInput.value = changeColor(userCoatCurrentColor, availableCoatColors);
+  userCoatCover.style.fill = userCoatInput.value;
+});
+
+// Выбор цвета глаз для пользовательского персонажа
+// Обновление значения скрытого input в форме
+var userEyesCover = document.querySelector('.setup-player .wizard-eyes');
+var userEyesInput = document.querySelector('.setup-player input[name="eyes-color"]');
+
+userEyesCover.addEventListener('click', function () {
+  var userEyesCurrentColor = userEyesInput.value;
+
+  userEyesInput.value = changeColor(userEyesCurrentColor, availableEyesColors);
+  userEyesCover.style.fill = userEyesInput.value;
+});
+
+// Выбор цвета файерболов для пользовательского персонажа
+// Обновление значения скрытого input в форме
+var userFireballCover = document.querySelector('.setup-player .setup-fireball-wrap');
+var userFireballInput = userFireballCover.querySelector('input[name="fireball-color"]');
+
+userFireballCover.addEventListener('click', function () {
+  var userFireballCurrentColor = userFireballInput.value;
+
+  userFireballInput.value = changeColor(userFireballCurrentColor, availableFireballColors);
+  userFireballCover.style.backgroundColor = userFireballInput.value;
+});
+
+/**
+* Функция, выдающая новые значения цветов из входного массива (работает последовательно и по кругу)
+* @param {string} currentColor — текущий цвет, подлежащий изменению
+* @param {array} availableColors — входной массив с доступными цветами
+* @return {string} availableColors[currentIndex] — следующий цвет
+*/
+function changeColor(currentColor, availableColors) {
+  var arrayLimitValue = availableColors.length - 1;
+  var currentIndex = availableColors.indexOf(currentColor);
+
+  if (currentIndex < arrayLimitValue && currentIndex !== -1) {
+    currentIndex++;
+  } else if (currentIndex === arrayLimitValue) {
+    currentIndex = 0;
+  } else if (currentIndex === -1) {
+    currentIndex = 2;
+  }
+
+  return availableColors[currentIndex];
+}
+
+
+/*
+***********************************************************************************
+***********************************************************************************
+***
+***               ВАЛИДАЦИЯ ТЕКСТОВЫХ ДАННЫХ ПРИ НАСТРОЙКЕ ИГРОКА.
+***
+***********************************************************************************
+***********************************************************************************
+*/
+
+// Проверка валидности пользовательского ввода (имя игрока)
+var userNameInput = playerSetup.querySelector('.setup-user-name');
+
+userNameInput.addEventListener('input', function () {
+  if (userNameInput.validity.tooShort) {
+    userNameInput.setCustomValidity('Введенное имя слишком короткое (менее 2-х символов).');
+  } else if (userNameInput.validity.tooLong) {
+    userNameInput.setCustomValidity('Введенное имя слишком длинное (ограничение — 25 символов).');
+  } else if (userNameInput.validity.valueMissing) {
+    userNameInput.setCustomValidity('Это поле обязательно к заполнению.');
+  } else {
+    userNameInput.setCustomValidity('');
+  }
+});
