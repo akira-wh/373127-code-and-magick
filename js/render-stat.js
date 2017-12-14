@@ -1,5 +1,15 @@
 'use strict';
 
+/*
+***********************************************************************************
+***********************************************************************************
+***
+***                       ОТРИСОВКА СТАТИСТИКИ ЛУЧШИХ ИГРОКОВ.
+***
+***********************************************************************************
+***********************************************************************************
+*/
+
 /**
 * Отрисовка модального окна со списком игроков и их наглядной статистикой
 * @function
@@ -43,14 +53,14 @@ window.renderStatistics = function (ctx, names, times) {
     if (name === 'Вы') {
       ctx.fillStyle = 'rgba(255, 0, 0, 1)';
     } else {
-      var transparencyValue = getRandomNumber(0.2, 1, 1);
+      var transparencyValue = window.utils.getRandomNumber(0.2, 1, 1);
       ctx.fillStyle = 'rgba(66, 88, 254, ' + transparencyValue + ')';
     }
 
     // Расчет высоты колонок:
     // максимальное время игры === максимально допустимая высота колонки в px
     // остальные колонки расчитываются пропорционально
-    var columnHeight = (columnMaxHeight / getMaxElement(times)) * time;
+    var columnHeight = (columnMaxHeight / window.utils.getMaxElement(times)) * time;
 
     // Расчет сдвига разновысотных колонок относительно единой точки инициализации columnInitialY
     var columnMarginY = columnMaxHeight - columnHeight;
@@ -94,40 +104,6 @@ window.renderStatistics = function (ctx, names, times) {
     columnMarginX += 90;
   }
 };
-
-/**
-* Функция поиска наибольшего значения из массива
-* @function getMaxElement
-* @param {array} someArray — массив
-* @return {number} — наибольшее значение из массива
-*/
-function getMaxElement(someArray) {
-  var maxValue = 0;
-  for (var i = 0; i < someArray.length; i++) {
-    if (someArray[i] > maxValue) {
-      maxValue = someArray[i];
-    }
-  }
-  return maxValue;
-}
-
-/**
-* Функция вычисления рандомного целого/дробного числа (настраиваемый диапазон)
-* @function getRandomNumber
-* @param {number} min — минимальное число (включительно)
-* @param {number} max — максимальное число (не включая)
-* @param {number} precision — необходимое количество знаков после дробной точки (опционально)
-* @return {number} — результат рандома
-*/
-function getRandomNumber(min, max, precision) {
-  var randomFloat = Math.random() * (max - min) + min;
-
-  if (precision === void 0 || precision === 0 || isNaN(precision)) {
-    return randomFloat;
-  } else {
-    return randomFloat.toFixed(precision);
-  }
-}
 
 /**
 * Функция получения ширины текста (px) перед выводом его на канвас
