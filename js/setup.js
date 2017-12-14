@@ -60,23 +60,27 @@ var availableFireballColors = [
 */
 
 // Создание и заполнение массива похожих персонажей (заполняется объектами)
-var similarWizards = [];
-generateSimilarWizards(4, similarWizards);
+var similarWizards = generateSimilarWizards(4);
 
 /**
 * Функция, заполняющая целевой массив сгенерированными объектами персонажей
+*
 * @function generateSimilarWizards
 * @param {number} expectedNumber — необходимое количество сгенерированных объектов
-* @param {array} destinationArray — целевой массив для заполнения
+* @return {array} — сгенерированный массив персонажей
 */
-function generateSimilarWizards(expectedNumber, destinationArray) {
+function generateSimilarWizards(expectedNumber) {
+  var requestedWizards = [];
+
   for (var i = 0; i < expectedNumber; i++) {
-    destinationArray[i] = {
+    requestedWizards[i] = {
       name: getRandomName(availableNames, availableSurenames),
       coatColor: getRandomCoatColor(availableCoatColors),
       eyesColor: getRandomEyesColor(availableEyesColors)
     };
   }
+
+  return requestedWizards;
 }
 
 /**
