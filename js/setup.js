@@ -1,175 +1,5 @@
 'use strict';
 
-// Константы
-var ESC_KEYCODE = 27;
-var ENTER_KEYCODE = 13;
-
-// Библиотеки с вариантами имен, фамилий, цветов одежды, глаз и файерболов
-var availableNames = [
-  'Иван',
-  'Хуан Себастьян',
-  'Мария',
-  'Кристоф',
-  'Виктор',
-  'Юлия',
-  'Люпита',
-  'Вашингтон'
-];
-var availableSurenames = [
-  'Де Марья',
-  'Верон',
-  'Мирабелла',
-  'Вальц',
-  'Онопко',
-  'Топольницкая',
-  'Нионго',
-  'Ирвинг'
-];
-var availableCoatColors = [
-  'rgb(101, 137, 164)',
-  'rgb(241, 43, 107)',
-  'rgb(146, 100, 161)',
-  'rgb(56, 159, 117)',
-  'rgb(215, 210, 55)',
-  'rgb(0, 0, 0)'
-];
-var availableEyesColors = [
-  'black',
-  'red',
-  'blue',
-  'yellow',
-  'green'
-];
-var availableFireballColors = [
-  '#ee4830',
-  '#30a8ee',
-  '#5ce6c0',
-  '#e848d5',
-  '#e6e848'
-];
-
-
-/*
-***********************************************************************************
-***********************************************************************************
-***
-***       РАБОТА С ПОХОЖИМИ ВОЛШЕБНИКАМИ (СОЗДАНИЕ, ВСТАВКА В РАЗМЕТКУ etc).
-***
-***********************************************************************************
-***********************************************************************************
-*/
-
-// Создание и заполнение массива похожих персонажей (заполняется объектами)
-var similarWizards = generateSimilarWizards(4);
-
-/**
-* Функция, заполняющая целевой массив сгенерированными объектами персонажей
-*
-* @function generateSimilarWizards
-* @param {number} expectedNumber — необходимое количество сгенерированных объектов
-* @return {array} — сгенерированный массив персонажей
-*/
-function generateSimilarWizards(expectedNumber) {
-  var requestedWizards = [];
-
-  for (var i = 0; i < expectedNumber; i++) {
-    requestedWizards[i] = {
-      name: getRandomName(availableNames, availableSurenames),
-      coatColor: getRandomCoatColor(availableCoatColors),
-      eyesColor: getRandomEyesColor(availableEyesColors)
-    };
-  }
-
-  return requestedWizards;
-}
-
-/**
-* Функция получения рандомных имени и фамилии для персонажа
-* @function getRandomName
-* @param {array} namesArray — входной массив с доступными именами
-* @param {array} surenamesArray — входной массив с доступными фамилиями
-* @return {string} — сгенерированные имя и фамилия
-*/
-function getRandomName(namesArray, surenamesArray) {
-  var counterLimit = namesArray.length - 1;
-  var characterName = namesArray[getRandomIndex(counterLimit)];
-  var characterSurename = surenamesArray[getRandomIndex(counterLimit)];
-
-  return characterName + ' ' + characterSurename;
-}
-
-/**
-* Функция, генерирующая случайное целое число в диапазоне от 0 до установленного максимума
-* @param {number} counterLimit — максимально возможное число
-* @return {number} — искомое случайное число
-*/
-function getRandomIndex(counterLimit) {
-  var result = Math.random() * (counterLimit + 1);
-  result = Math.floor(result);
-
-  return result;
-}
-
-/**
-* Функция получения рандомного цвета одежды для персонажа
-* @function getRandomCoatColor
-* @param {array} colorsArray — входной массив с доступными цветами
-* @return {string} — искомый цвет одежды
-*/
-function getRandomCoatColor(colorsArray) {
-  var counterLimit = colorsArray.length - 1;
-  var coatColor = colorsArray[getRandomIndex(counterLimit)];
-
-  return coatColor;
-}
-
-/**
-* Функция получения рандомного цвета глаз для персонажа
-* @function getRandomEyesColor
-* @param {array} colorsArray — входной массив с доступными цветами
-* @return {string} — искомый цвет глаз
-*/
-function getRandomEyesColor(colorsArray) {
-  var counterLimit = colorsArray.length - 1;
-  var eyesColor = colorsArray[getRandomIndex(counterLimit)];
-
-  return eyesColor;
-}
-
-// Получение, копирование и заполнение шаблонов с похожими волшебниками
-// Вставка результата в соответствующий список в разметке.
-//
-// 4 готовых шаблона уходят во fragment -> fragment в список wizardsList ->
-// -> wizardsList в секцию wizardsSection -> wizardsSection отрисовывается пользователю
-var wizardTemplate = document.querySelector('#similar-wizard-template').content;
-var wizardsSection = document.querySelector('.setup-similar');
-var wizardsList = wizardsSection.querySelector('.setup-similar-list');
-
-wizardsList.appendChild(fillSimilarWizardsTemplate(4));
-wizardsSection.classList.remove('hidden');
-
-/**
-* Функция, создающая Document Fragment и заполняющая его шаблонами персонажей.
-* @function fillSimilarWizardsTemplate
-* @param {number} expectedNumber — необходимое количество заполненых шаблонов во фрагменте
-* @return {object} fragment — document fragment с заполненными шаблонами
-*/
-function fillSimilarWizardsTemplate(expectedNumber) {
-  var fragment = document.createDocumentFragment();
-
-  for (var i = 0; i < expectedNumber; i++) {
-    var wizard = wizardTemplate.cloneNode(true);
-
-    wizard.querySelector('.setup-similar-label').textContent = similarWizards[i].name;
-    wizard.querySelector('.wizard-coat').style.fill = similarWizards[i].coatColor;
-    wizard.querySelector('.wizard-eyes').style.fill = similarWizards[i].eyesColor;
-    fragment.appendChild(wizard);
-  }
-
-  return fragment;
-}
-
-
 /*
 ***********************************************************************************
 ***********************************************************************************
@@ -191,7 +21,7 @@ playerSetupOpenButton.addEventListener('click', function () {
   window.addEventListener('keydown', onPlayerSetupEscPress);
 });
 playerSetupOpenButton.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
+  if (evt.keyCode === window.constants.ENTER_KEYCODE) {
     openPlayerSetup();
     window.addEventListener('keydown', onPlayerSetupEscPress);
   }
@@ -203,7 +33,7 @@ playerSetupCloseButton.addEventListener('click', function () {
   window.removeEventListener('keydown', onPlayerSetupEscPress);
 });
 playerSetupCloseButton.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
+  if (evt.keyCode === window.constants.ENTER_KEYCODE) {
     closePlayerSetup();
     window.removeEventListener('keydown', onPlayerSetupEscPress);
   }
@@ -231,7 +61,7 @@ function closePlayerSetup() {
 * @param {object} evt — объект события
 */
 function onPlayerSetupEscPress(evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
+  if (evt.keyCode === window.constants.ESC_KEYCODE) {
     closePlayerSetup();
   }
 }
@@ -253,7 +83,7 @@ var userCoatInput = document.querySelector('.setup-player input[name="coat-color
 userCoatCover.addEventListener('click', function () {
   var userCoatCurrentColor = userCoatInput.value;
 
-  userCoatInput.value = changeColor(userCoatCurrentColor, availableCoatColors);
+  userCoatInput.value = changeColor(userCoatCurrentColor, window.libraries.AVAILABLE_COAT_COLORS);
   userCoatCover.style.fill = userCoatInput.value;
 });
 
@@ -265,7 +95,7 @@ var userEyesInput = document.querySelector('.setup-player input[name="eyes-color
 userEyesCover.addEventListener('click', function () {
   var userEyesCurrentColor = userEyesInput.value;
 
-  userEyesInput.value = changeColor(userEyesCurrentColor, availableEyesColors);
+  userEyesInput.value = changeColor(userEyesCurrentColor, window.libraries.AVAILABLE_EYES_COLORS);
   userEyesCover.style.fill = userEyesInput.value;
 });
 
@@ -277,7 +107,7 @@ var userFireballInput = userFireballCover.querySelector('input[name="fireball-co
 userFireballCover.addEventListener('click', function () {
   var userFireballCurrentColor = userFireballInput.value;
 
-  userFireballInput.value = changeColor(userFireballCurrentColor, availableFireballColors);
+  userFireballInput.value = changeColor(userFireballCurrentColor, window.libraries.AVAILABLE_FIREBALL_COLORS);
   userFireballCover.style.backgroundColor = userFireballInput.value;
 });
 
